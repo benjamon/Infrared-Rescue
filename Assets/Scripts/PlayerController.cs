@@ -5,7 +5,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
     public KeyCode left, right;
     public float speed, lerpDist, lerpStart, lerpSpeed, wiggleActual = 1f, screenReaction;
-    float leftFloat = 0f;
+    float leftFloat = 0f, startPos = 0f;
     Vector3 endPosition;
     public Transform finishLine;
     public Transform cFall, textL, textR, myInfra, cFollow;
@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        startPos = transform.position.z;
 	}
 	
 	// Update is called once per frame
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour {
         transform.position += Vector3.forward * speed;
         float ef = Mathf.Lerp(-.3954f, 1f, wiggleActual);
         ef = Mathf.Lerp(0, 13700000, Mathf.Sin(ef * Mathf.PI * 0.01f));
-        txtR.text = ((int)((transform.position.z / finishLine.position.z) * 85f)) + "km";
+        txtR.text = ((int)(((transform.position.z - startPos) / (finishLine.position.z - startPos)) * 85f)) + "km";
         if (ef < 1000)
         {
             txtLL.text = (int)ef + "GHz";
@@ -73,7 +74,7 @@ public class PlayerController : MonoBehaviour {
             if (wiggleActual < .3f)
             {
                 textRes.text = "R TO RESTART\n\nM FOR MENU";
-                textResult.text = "YOU WERE <color=#ff0000ff>" + ((int)(85 - (transform.position.z / finishLine.position.z) * 85f)) + "km</color> AWAY FROM ESCAPING THE ATMOSPHERE";
+                textResult.text = "YOU WERE <color=#ff0000ff>" + ((int)(85 - ((transform.position.z - startPos) / (finishLine.position.z - startPos)) * 85f)) + "km</color> AWAY FROM ESCAPING THE ATMOSPHERE";
                 Destroy(gameObject);
             } else
             {
