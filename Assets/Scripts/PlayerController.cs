@@ -4,17 +4,19 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
     public KeyCode left, right;
-    public float speed, lerpDist, lerpStart, lerpSpeed, wiggleActual = 1f, screenReaction;
+    public float speed, lerpDist, lerpStart, lerpSpeed, wiggleActual = 1f, screenReaction, rotateAmount;
     float leftFloat = 0f, startPos = 0f;
     Vector3 endPosition;
     public Transform finishLine;
-    public Transform cFall, textL, textR, myInfra, cFollow;
+    public Transform cFall, textL, textR, myInfra, cFollow, myInfraModel;
     public Text txtLL, txtR, textRes, textResult;
+    private Vector3 startEuler;
 
 	// Use this for initialization
 	void Start () {
         startPos = transform.position.z;
-	}
+        startEuler = myInfraModel.eulerAngles;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -22,20 +24,28 @@ public class PlayerController : MonoBehaviour {
         {
             leftFloat = lerpStart;
             endPosition = transform.position + transform.right * -lerpDist;
+            rotateAmount = -20;
         }
         if (Input.GetKeyDown(right))
         {
             leftFloat = lerpStart;
             endPosition = transform.position + transform.right * lerpDist;
+            rotateAmount = 20;
         }
-        if (leftFloat > 0f)
+
+        if (leftFloat > 0)
         {
             transform.position = Vector3.Lerp(new Vector3(endPosition.x, endPosition.y, transform.position.z), transform.position, leftFloat);
+            myInfraModel.rotation = Quaternion.LookRotation(transform.up);
+            myInfraModel.Rotate(Vector3.forward, Mathf.Lerp(180, 180 + rotateAmount, leftFloat));
             leftFloat -= lerpSpeed;
         }
         else {
             transform.rotation = Quaternion.LookRotation(Vector3.forward);
+            myInfraModel.rotation = Quaternion.LookRotation(transform.up);
+            myInfraModel.Rotate(Vector3.forward, 180);
         }
+
         transform.position += Vector3.forward * speed;
         float ef = Mathf.Lerp(-.3954f, 1f, wiggleActual);
         ef = Mathf.Lerp(0, 13700000, Mathf.Sin(ef * Mathf.PI * 0.01f));
@@ -94,6 +104,8 @@ public class PlayerController : MonoBehaviour {
             gameObject.GetComponent<AudioSource>().Play();
             Destroy(col.gameObject);
             wiggleActual = Mathf.Min(wiggleActual + .1f, 1f);
+            GameObject go = Instantiate(Resources.Load("winstance") as GameObject); ;
+            go.transform.position = transform.position + transform.forward * 15;
         }
     }
 }

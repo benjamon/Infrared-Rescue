@@ -5,13 +5,21 @@ using System.Collections;
 public class CloudGenerator: MonoBehaviour {
     public float oddsAgainst, avgCluster, clusterDev, avgSize, standardDev, xSpread, zSpread, bigXSpread, speedOddsAgainst;
     public AudioSource ass, musik;
-    private float layerIt = 0, tranSpeed = -.1f, chanceMult = 2f, clChanceMult = 2f;
     public Text layerText;
+    private float layerIt = 0, tranSpeed = -.1f, chanceMult = 2f, clChanceMult = 2f;
+    private bool gcExists, gcHasPlayed;
     GameControl gc;
 
     // Use this for initialization
     void Start () {
-        gc = GameObject.Find("Controlla").GetComponent<GameControl>();
+        try
+        {
+            gc = GameObject.Find("Controlla").GetComponent<GameControl>();
+        }
+        catch
+        {
+            Debug.Log("Didn't Find");
+        }
         GameObject[] layers = GameObject.FindGameObjectsWithTag("atmosphere");
         for (int i = 0; i < layers.Length; i++)
         {
@@ -21,17 +29,26 @@ public class CloudGenerator: MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        oddsAgainst = gc.oddsAg;
-        if (!ass.isPlaying || gc.hasPlayed == 1)
+        gcExists = (gc != null);
+        if (gcExists)
+        {
+            gcHasPlayed = (gc.hasPlayed == 1);
+            oddsAgainst = gc.oddsAg;
+        }
+        else {
+            gcHasPlayed = true;
+            oddsAgainst = 5;
+        }
+        if (!ass.isPlaying || gcHasPlayed || !gcExists)
         {
             if (ass.isPlaying) ass.Stop();
-            if (!musik.isPlaying || gc.hasPlayed == 1)
+            if (!musik.isPlaying || gcHasPlayed || !gcExists)
             {
                 if (!musik.isPlaying)
                 {
                     musik.Play();
                 }
-                gc.hasPlayed = 1;
+                if (gcExists) gc.hasPlayed = 1;
             }
             if (Random.Range(0, oddsAgainst * chanceMult) < 1 && layerIt <= 0)
             {
