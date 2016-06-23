@@ -14,8 +14,9 @@ public class DissapearAndDie : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        f += .075f;
-        r.material.SetColor("_TintColor", Color.Lerp(c, new Color(255,0,0, 0), f));
+        f += .2f;
+        transform.localScale = transform.localScale * .8f;
+        r.material.SetColor("_TintColor", Color.Lerp(c, new Color(0, 0, 0, 0), f));
         if (f > 1)
         {
             Destroy(gameObject);

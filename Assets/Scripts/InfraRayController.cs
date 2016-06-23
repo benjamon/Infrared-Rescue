@@ -18,12 +18,16 @@ public class InfraRayController : MonoBehaviour {
         currentWiggle += ((wiggleSpeed * wiggleSpeed) + wiggleSpeed) / 2;
         if (transform.parent != null)
         {
-            wiggleSpeed = Mathf.Lerp(wiggleSpeed, p.wiggleActual, .05f);
+            if (p != null)
+            {
+                wiggleSpeed = Mathf.Lerp(wiggleSpeed, p.wiggleActual, .05f);
+            }
             transform.localPosition = new Vector3(Mathf.Sin(currentWiggle) * wiggleAmp, 0);
             lastX = transform.position.x;
         } else
         {
-            transform.position = new Vector3(Mathf.Sin(currentWiggle) * wiggleAmp + lastX, 0, transform.position.z + .5f);
+            transform.position = new Vector3(Mathf.Sin(currentWiggle) * wiggleAmp, 0, 0);
+            Debug.Log("no parents");
         }
     }
 }

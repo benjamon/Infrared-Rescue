@@ -15,10 +15,10 @@ public class CameraFollow : MonoBehaviour {
         if (t != null)
         {
             trynabe = t.position;
-            transform.position = Vector3.Lerp(transform.position, t.position, .125f);
+            transform.position = Vector3.Lerp(transform.position, t.position, .16f);
         } else
         {
-            transform.position = Vector3.Lerp(transform.position, trynabe, .125f);
+            transform.position = Vector3.Lerp(transform.position, trynabe, .16f);
         }
 	}
 }

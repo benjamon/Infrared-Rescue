@@ -21,7 +21,9 @@ public class StartGame : MonoBehaviour {
     public void whenHasClicked()
     {
         go.SetActive(true);
-        GameObject.Find("Controlla").GetComponent<GameControl>().oddsAg = oddsAgainst;
+        GameControl g = GameObject.Find("Controlla").GetComponent<GameControl>();
+        if (g == null) Debug.Log("didn't find g");
+        g.oddsAg = oddsAgainst;
         SceneManager.LoadSceneAsync("Infraready");
     }
 }
